@@ -133,7 +133,8 @@ export default function Landing() {
               </div>
               <div>
                 <p className="font-bold text-lg">Escuela de Equitación JINETES</p>
-                <p className="text-earth-400 text-sm">Colombia</p>
+                <p className="text-earth-300 text-sm font-medium">Pereira, Risaralda</p>
+                <p className="text-earth-400 text-sm">Vía Cerritos — Al lado de La Finca de Rigo</p>
               </div>
             </div>
             <a
