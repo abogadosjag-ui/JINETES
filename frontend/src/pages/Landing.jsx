@@ -44,7 +44,7 @@ export default function Landing() {
 
         <div className="relative max-w-6xl mx-auto px-6 py-48 text-center">
           <img src="/logo.png" alt="JINETES"
-            className="h-32 w-auto mx-auto mb-6 brightness-0 invert drop-shadow-2xl" />
+            className="h-52 w-auto mx-auto mb-6 brightness-0 invert drop-shadow-2xl" />
           <p className="text-primary-300 font-semibold uppercase tracking-widest text-sm mb-3">
             Donde el valor y la habilidad se encuentran en la arena
           </p>
