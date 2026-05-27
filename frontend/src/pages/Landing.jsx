@@ -106,6 +106,48 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* --- UBICACIÓN --- */}
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <div className="text-center mb-10">
+          <p className="text-primary-400 text-sm font-semibold uppercase tracking-widest mb-2">Encuéntranos</p>
+          <h2 className="text-3xl font-extrabold">Nuestra Ubicación</h2>
+        </div>
+        <div className="bg-earth-800 rounded-3xl overflow-hidden border border-earth-700 shadow-xl">
+          <div className="w-full h-72 md:h-96">
+            <iframe
+              title="Ubicación Escuela JINETES"
+              src="https://maps.google.com/maps?q=4.8052421,-75.8211887&z=15&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="grayscale-[20%] contrast-[1.05]"
+            />
+          </div>
+          <div className="p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-start gap-3 text-left">
+              <div className="bg-primary-500/20 rounded-xl w-10 h-10 flex items-center justify-center shrink-0 mt-0.5">
+                <MapPin size={20} className="text-primary-400" />
+              </div>
+              <div>
+                <p className="font-bold text-lg">Escuela de Equitación JINETES</p>
+                <p className="text-earth-400 text-sm">Colombia</p>
+              </div>
+            </div>
+            <a
+              href="https://maps.app.goo.gl/TSLPE8Pz9w63ZRyN9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary-500 hover:bg-primary-400 rounded-xl font-bold transition shadow-lg shrink-0 whitespace-nowrap">
+              <MapPin size={18} />
+              ¿Cómo llegar?
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* --- CTA FINAL --- */}
       <section className="bg-primary-700 py-16 text-center px-6">
         <h2 className="text-3xl font-extrabold mb-4">¿Listo para montar?</h2>
