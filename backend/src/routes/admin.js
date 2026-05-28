@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 const { getAllUsers, getUserById } = require('../controllers/userController');
 const { getAllPayments, updatePaymentStatus } = require('../controllers/paymentController');
-const { createSlot, deleteSlot, getSlotDetail } = require('../controllers/classController');
+const { createSlot, deleteSlot, getSlotDetail, assignStudent, unassignStudent } = require('../controllers/classController');
 const { getAllCabalgatas, updateCabalgata } = require('../controllers/cabalgataController');
 
 router.use(authMiddleware, adminMiddleware);
@@ -19,6 +19,8 @@ router.put('/payments/:id', updatePaymentStatus);
 router.post('/classes', createSlot);
 router.delete('/classes/:id', deleteSlot);
 router.get('/classes/:id', getSlotDetail);
+router.post('/classes/:id/assign', assignStudent);
+router.delete('/classes/:id/assign/:userId', unassignStudent);
 
 // Cabalgatas
 router.get('/cabalgatas', getAllCabalgatas);
