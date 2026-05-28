@@ -14,7 +14,11 @@ async function getProfile(req, res, next) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, role: true, phone: true, emergencyContact: true, experienceLevel: true, avatarUrl: true, createdAt: true },
+      select: {
+        id: true, name: true, email: true, role: true, phone: true,
+        emergencyContact: true, experienceLevel: true, avatarUrl: true,
+        isActive: true, createdAt: true,
+      },
     });
     res.json(user);
   } catch (err) { next(err); }
@@ -26,7 +30,10 @@ async function updateProfile(req, res, next) {
     const user = await prisma.user.update({
       where: { id: req.user.id },
       data,
-      select: { id: true, name: true, email: true, role: true, phone: true, emergencyContact: true, experienceLevel: true, createdAt: true },
+      select: {
+        id: true, name: true, email: true, role: true, phone: true,
+        emergencyContact: true, experienceLevel: true, createdAt: true,
+      },
     });
     res.json(user);
   } catch (err) {
@@ -35,13 +42,17 @@ async function updateProfile(req, res, next) {
   }
 }
 
-// Admin
+// ── Admin ───────────────────────────────────────────────
+
 async function getAllUsers(req, res, next) {
   try {
     const users = await prisma.user.findMany({
       where: { role: 'STUDENT' },
-      select: { id: true, name: true, email: true, phone: true, experienceLevel: true, createdAt: true,
-        _count: { select: { payments: true, classBookings: true, cabalgatas: true } } },
+      select: {
+        id: true, name: true, email: true, phone: true,
+        experienceLevel: true, isActive: true, inactiveSince: true, createdAt: true,
+        _count: { select: { payments: true, classBookings: true, cabalgatas: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
     res.json(users);
@@ -54,7 +65,7 @@ async function getUserById(req, res, next) {
       where: { id: req.params.id },
       select: {
         id: true, name: true, email: true, phone: true, emergencyContact: true,
-        experienceLevel: true, createdAt: true,
+        experienceLevel: true, isActive: true, inactiveSince: true, createdAt: true,
         payments: { orderBy: { createdAt: 'desc' } },
         classBookings: { include: { slot: true }, orderBy: { createdAt: 'desc' } },
         cabalgatas: { orderBy: { createdAt: 'desc' } },
@@ -65,4 +76,26 @@ async function getUserById(req, res, next) {
   } catch (err) { next(err); }
 }
 
-module.exports = { getProfile, updateProfile, getAllUsers, getUserById };
+// Admin: activa o inactiva un alumno
+async function toggleUserStatus(req, res, next) {
+  try {
+    const current = await prisma.user.findUnique({
+      where: { id: req.params.id },
+      select: { isActive: true },
+    });
+    if (!current) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const newActive = !current.isActive;
+    const user = await prisma.user.update({
+      where: { id: req.params.id },
+      data: {
+        isActive: newActive,
+        inactiveSince: newActive ? null : new Date(),
+      },
+      select: { id: true, isActive: true, inactiveSince: true },
+    });
+    res.json(user);
+  } catch (err) { next(err); }
+}
+
+module.exports = { getProfile, updateProfile, getAllUsers, getUserById, toggleUserStatus };

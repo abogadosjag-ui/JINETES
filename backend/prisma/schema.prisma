@@ -19,6 +19,8 @@ model User {
   emergencyContact String?
   experienceLevel  String         @default("BEGINNER")
   avatarUrl        String?
+  isActive         Boolean        @default(true)
+  inactiveSince    DateTime?
   createdAt        DateTime       @default(now())
   payments         Payment[]
   classBookings    ClassBooking[]
