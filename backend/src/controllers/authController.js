@@ -48,7 +48,14 @@ async function register(req, res, next) {
 async function login(req, res, next) {
   try {
     const { email, password } = loginSchema.parse(req.body);
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true, name: true, email: true, password: true, role: true,
+        phone: true, emergencyContact: true, experienceLevel: true,
+        avatarUrl: true, createdAt: true,
+      },
+    });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     }

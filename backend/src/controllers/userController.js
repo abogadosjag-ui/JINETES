@@ -16,8 +16,7 @@ async function getProfile(req, res, next) {
       where: { id: req.user.id },
       select: {
         id: true, name: true, email: true, role: true, phone: true,
-        emergencyContact: true, experienceLevel: true, avatarUrl: true,
-        isActive: true, createdAt: true,
+        emergencyContact: true, experienceLevel: true, avatarUrl: true, createdAt: true,
       },
     });
     res.json(user);
