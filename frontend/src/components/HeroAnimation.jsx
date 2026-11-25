@@ -1,4 +1,3 @@
-/* Animación del vaquero — usa el video generado con IA */
 export default function HeroAnimation() {
   return (
     <div
@@ -11,8 +10,15 @@ export default function HeroAnimation() {
         muted
         loop
         playsInline
-        className="w-full object-cover object-bottom"
-        style={{ maxHeight: '320px', mixBlendMode: 'multiply' }}
+        style={{
+          display: 'block',
+          width: '100%',
+          maxHeight: '220px',
+          objectFit: 'cover',
+          objectPosition: 'center bottom',
+          mixBlendMode: 'multiply',
+          opacity: 0.88,
+        }}
       />
     </div>
   );
