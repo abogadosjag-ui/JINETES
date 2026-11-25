@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, CreditCard, Users } from 'lucide-react';
+import { CalendarDays, MapPin, CreditCard, Users, ZoomIn } from 'lucide-react';
 import { useState } from 'react';
+import MorphingNavbar from '../components/MorphingNavbar';
 
 const fotos = [
   { src: '/img/foto1.jpeg', alt: 'Jinetes en cabalgata' },
@@ -15,24 +16,9 @@ export default function Landing() {
   const [lightbox, setLightbox] = useState(null);
 
   return (
-    <div className="min-h-screen bg-earth-900 text-white">
+    <div id="top" className="min-h-screen bg-earth-900 text-white">
 
-      {/* --- NAVBAR --- */}
-      <header className="sticky top-0 z-30 bg-earth-900/90 backdrop-blur border-b border-earth-700">
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-3">
-          <img src="/logo.png" alt="JINETES" className="h-12 w-auto brightness-0 invert drop-shadow-md" />
-          <div className="flex gap-3">
-            <Link to="/login"
-              className="px-4 py-2 rounded-lg border border-earth-400 hover:bg-earth-700 transition text-sm font-semibold">
-              Iniciar sesión
-            </Link>
-            <Link to="/register"
-              className="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-400 transition text-sm font-semibold">
-              Inscribirse
-            </Link>
-          </div>
-        </div>
-      </header>
+      <MorphingNavbar />
 
       {/* --- HERO --- */}
       <section className="relative overflow-hidden">
@@ -88,26 +74,58 @@ export default function Landing() {
       </section>
 
       {/* --- GALERÍA --- */}
-      <section id="galeria" className="max-w-6xl mx-auto px-6 pb-20">
+      <section id="galeria" className="max-w-6xl mx-auto px-6 pb-20 scroll-mt-20">
         <div className="text-center mb-10">
           <p className="text-primary-400 text-sm font-semibold uppercase tracking-widest mb-2">Nuestra escuela</p>
           <h2 className="text-3xl font-extrabold">Momentos en la arena</h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {fotos.map((f, i) => (
-            <button key={i} onClick={() => setLightbox(f)}
-              className="relative overflow-hidden rounded-2xl aspect-[3/4] group cursor-zoom-in">
-              <img src={f.src} alt={f.alt}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-earth-900/0 group-hover:bg-earth-900/30 transition-colors duration-300" />
+        {/* Mosaic grid: photo 1 spans 2 cols + 2 rows on desktop */}
+        <div
+          className="grid grid-cols-2 md:grid-cols-3 gap-3"
+          style={{ gridAutoRows: '190px' }}
+        >
+          {/* Large tile */}
+          <button
+            onClick={() => setLightbox(fotos[0])}
+            className="col-span-2 md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-2xl cursor-zoom-in"
+          >
+            <img
+              src={fotos[0].src}
+              alt={fotos[0].alt}
+              className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-earth-900/0 group-hover:bg-earth-900/20 transition-all duration-300">
+              <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ZoomIn size={18} />
+              </span>
+            </div>
+          </button>
+
+          {/* Remaining tiles */}
+          {fotos.slice(1).map((f, i) => (
+            <button
+              key={i}
+              onClick={() => setLightbox(f)}
+              className="group relative overflow-hidden rounded-2xl cursor-zoom-in"
+            >
+              <img
+                src={f.src}
+                alt={f.alt}
+                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-earth-900/0 group-hover:bg-earth-900/20 transition-all duration-300">
+                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <ZoomIn size={18} />
+                </span>
+              </div>
             </button>
           ))}
         </div>
       </section>
 
       {/* --- UBICACIÓN --- */}
-      <section className="max-w-5xl mx-auto px-6 pb-20">
+      <section id="ubicacion" className="max-w-5xl mx-auto px-6 pb-20 scroll-mt-20">
         <div className="text-center mb-10">
           <p className="text-primary-400 text-sm font-semibold uppercase tracking-widest mb-2">Encuéntranos</p>
           <h2 className="text-3xl font-extrabold">Nuestra Ubicación</h2>
