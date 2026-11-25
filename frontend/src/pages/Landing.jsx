@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, CreditCard, Users, ZoomIn } from 'lucide-react';
-import { useState } from 'react';
+import { CalendarDays, MapPin, CreditCard, Users, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import MorphingNavbar from '../components/MorphingNavbar';
 
 const fotos = [
@@ -14,6 +14,18 @@ const fotos = [
 
 export default function Landing() {
   const [lightbox, setLightbox] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const timerRef = useRef(null);
+
+  const prev = () => setCurrent(i => (i - 1 + fotos.length) % fotos.length);
+  const next = () => setCurrent(i => (i + 1) % fotos.length);
+
+  useEffect(() => {
+    if (hovered) return;
+    timerRef.current = setInterval(next, 4000);
+    return () => clearInterval(timerRef.current);
+  }, [hovered, current]);
 
   return (
     <div id="top" className="min-h-screen bg-earth-900 text-white">
@@ -80,47 +92,65 @@ export default function Landing() {
           <h2 className="text-3xl font-extrabold">Momentos en la arena</h2>
         </div>
 
-        {/* Mosaic grid: photo 1 spans 2 cols + 2 rows on desktop */}
+        {/* Carrusel */}
         <div
-          className="grid grid-cols-2 md:grid-cols-3 gap-3"
-          style={{ gridAutoRows: '190px' }}
+          className="relative overflow-hidden rounded-3xl shadow-2xl"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          {/* Large tile */}
-          <button
-            onClick={() => setLightbox(fotos[0])}
-            className="col-span-2 md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-2xl cursor-zoom-in"
+          {/* Slides */}
+          <div
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${current * 100}%)` }}
           >
-            <img
-              src={fotos[0].src}
-              alt={fotos[0].alt}
-              className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-earth-900/0 group-hover:bg-earth-900/20 transition-all duration-300">
-              <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <ZoomIn size={18} />
-              </span>
-            </div>
+            {fotos.map((f, i) => (
+              <div key={i} className="w-full flex-shrink-0">
+                <img
+                  src={f.src}
+                  alt={f.alt}
+                  onClick={() => setLightbox(f)}
+                  className="w-full h-72 md:h-[520px] object-cover cursor-zoom-in"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Flecha izquierda */}
+          <button
+            onClick={prev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-earth-900/60 hover:bg-earth-900/90 backdrop-blur-sm flex items-center justify-center text-white transition"
+            aria-label="Anterior"
+          >
+            <ChevronLeft size={22} />
           </button>
 
-          {/* Remaining tiles */}
-          {fotos.slice(1).map((f, i) => (
-            <button
-              key={i}
-              onClick={() => setLightbox(f)}
-              className="group relative overflow-hidden rounded-2xl cursor-zoom-in"
-            >
-              <img
-                src={f.src}
-                alt={f.alt}
-                className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
+          {/* Flecha derecha */}
+          <button
+            onClick={next}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-earth-900/60 hover:bg-earth-900/90 backdrop-blur-sm flex items-center justify-center text-white transition"
+            aria-label="Siguiente"
+          >
+            <ChevronRight size={22} />
+          </button>
+
+          {/* Dots */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {fotos.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === current ? 'w-6 bg-primary-500' : 'w-2 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Foto ${i + 1}`}
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-earth-900/0 group-hover:bg-earth-900/20 transition-all duration-300">
-                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-earth-900/80 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <ZoomIn size={18} />
-                </span>
-              </div>
-            </button>
-          ))}
+            ))}
+          </div>
+
+          {/* Contador */}
+          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-earth-900/60 backdrop-blur-sm text-xs font-semibold text-white">
+            {current + 1} / {fotos.length}
+          </div>
         </div>
       </section>
 
