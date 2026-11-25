@@ -1,31 +1,20 @@
 import { Link } from 'react-router-dom';
-import { CalendarDays, MapPin, CreditCard, Users, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { CalendarDays, MapPin, CreditCard, Users } from 'lucide-react';
+import { useState } from 'react';
 import MorphingNavbar from '../components/MorphingNavbar';
 
 const fotos = [
-  { src: '/img/foto1.jpeg', alt: 'Jinetes en cabalgata' },
-  { src: '/img/foto2.jpeg', alt: 'Clase de equitación' },
-  { src: '/img/foto3.jpeg', alt: 'Trabajo con ganado' },
-  { src: '/img/foto4.jpeg', alt: 'Clase familiar' },
-  { src: '/img/foto5.jpeg', alt: 'Entrenamiento con lazo' },
-  { src: '/img/foto6.jpeg', alt: 'Práctica en la arena' },
+  { src: '/img/foto1.jpeg', alt: 'Jinetes en cabalgata',    label: 'Cabalgata' },
+  { src: '/img/foto2.jpeg', alt: 'Clase de equitación',     label: 'Equitación' },
+  { src: '/img/foto3.jpeg', alt: 'Trabajo con ganado',      label: 'Ganado' },
+  { src: '/img/foto4.jpeg', alt: 'Clase familiar',          label: 'Familia' },
+  { src: '/img/foto5.jpeg', alt: 'Entrenamiento con lazo',  label: 'Lazo' },
+  { src: '/img/foto6.jpeg', alt: 'Práctica en la arena',    label: 'Arena' },
 ];
 
 export default function Landing() {
   const [lightbox, setLightbox] = useState(null);
-  const [current, setCurrent] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const timerRef = useRef(null);
-
-  const prev = () => setCurrent(i => (i - 1 + fotos.length) % fotos.length);
-  const next = () => setCurrent(i => (i + 1) % fotos.length);
-
-  useEffect(() => {
-    if (hovered) return;
-    timerRef.current = setInterval(next, 4000);
-    return () => clearInterval(timerRef.current);
-  }, [hovered, current]);
+  const [active, setActive] = useState(2);
 
   return (
     <div id="top" className="min-h-screen bg-earth-900 text-white">
@@ -92,65 +81,78 @@ export default function Landing() {
           <h2 className="text-3xl font-extrabold">Momentos en la arena</h2>
         </div>
 
-        {/* Carrusel */}
+        {/* Desktop — Accordion expandable */}
         <div
-          className="relative overflow-hidden rounded-3xl shadow-2xl"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          className="hidden md:flex gap-1 h-[500px] rounded-3xl overflow-hidden shadow-2xl"
+          onMouseLeave={() => setActive(2)}
         >
-          {/* Slides */}
-          <div
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${current * 100}%)` }}
-          >
-            {fotos.map((f, i) => (
-              <div key={i} className="w-full flex-shrink-0">
-                <img
-                  src={f.src}
-                  alt={f.alt}
-                  onClick={() => setLightbox(f)}
-                  className="w-full h-72 md:h-[520px] object-cover cursor-zoom-in"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Flecha izquierda */}
-          <button
-            onClick={prev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-earth-900/60 hover:bg-earth-900/90 backdrop-blur-sm flex items-center justify-center text-white transition"
-            aria-label="Anterior"
-          >
-            <ChevronLeft size={22} />
-          </button>
-
-          {/* Flecha derecha */}
-          <button
-            onClick={next}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-earth-900/60 hover:bg-earth-900/90 backdrop-blur-sm flex items-center justify-center text-white transition"
-            aria-label="Siguiente"
-          >
-            <ChevronRight size={22} />
-          </button>
-
-          {/* Dots */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {fotos.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === current ? 'w-6 bg-primary-500' : 'w-2 bg-white/50 hover:bg-white/80'
-                }`}
-                aria-label={`Foto ${i + 1}`}
+          {fotos.map((f, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden cursor-pointer"
+              style={{
+                flex: active === i ? '5 1 0' : '0.55 1 0',
+                transition: 'flex 0.6s cubic-bezier(0.4,0,0.2,1)',
+              }}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => setLightbox(f)}
+            >
+              <img
+                src={f.src}
+                alt={f.alt}
+                className="w-full h-full object-cover"
+                style={{
+                  transform: active === i ? 'scale(1.03)' : 'scale(1.12)',
+                  transition: 'transform 0.6s ease',
+                }}
               />
-            ))}
-          </div>
 
-          {/* Contador */}
-          <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-earth-900/60 backdrop-blur-sm text-xs font-semibold text-white">
-            {current + 1} / {fotos.length}
-          </div>
+              {/* Overlay oscuro en las no activas */}
+              <div
+                className="absolute inset-0 bg-earth-900/60"
+                style={{ opacity: active === i ? 0 : 1, transition: 'opacity 0.4s ease' }}
+              />
+
+              {/* Etiqueta vertical cuando está comprimida */}
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                style={{ opacity: active === i ? 0 : 1, transition: 'opacity 0.3s ease' }}
+              >
+                <span
+                  className="text-white font-bold text-xs uppercase tracking-widest bg-earth-900/70 px-2 py-3 rounded"
+                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                >
+                  {f.label}
+                </span>
+              </div>
+
+              {/* Descripción en la activa */}
+              <div
+                className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-earth-900 via-earth-900/40 to-transparent"
+                style={{ opacity: active === i ? 1 : 0, transition: 'opacity 0.4s ease', pointerEvents: 'none' }}
+              >
+                <p className="text-primary-400 text-xs font-bold uppercase tracking-widest mb-1">Nuestra escuela</p>
+                <p className="text-white font-extrabold text-xl">{f.alt}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile — grid 2 cols */}
+        <div className="md:hidden grid grid-cols-2 gap-2">
+          {fotos.map((f, i) => (
+            <button
+              key={i}
+              onClick={() => setLightbox(f)}
+              className="relative overflow-hidden rounded-2xl aspect-square group"
+            >
+              <img src={f.src} alt={f.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-earth-900/40 group-hover:bg-earth-900/0 transition-colors duration-300" />
+              <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-earth-900/80 to-transparent">
+                <p className="text-white text-xs font-bold">{f.label}</p>
+              </div>
+            </button>
+          ))}
         </div>
       </section>
 
