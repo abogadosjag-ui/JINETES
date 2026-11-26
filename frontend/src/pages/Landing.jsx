@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { CalendarDays, MapPin, CreditCard, Users } from 'lucide-react';
 import { useState } from 'react';
 import MorphingNavbar from '../components/MorphingNavbar';
+import HeroAnimation from '../components/HeroAnimation';
 
 const fotos = [
   { src: '/img/foto1.jpeg', alt: 'Jinetes en cabalgata',   label: 'Cabalgata' },
@@ -53,7 +54,7 @@ export default function Landing() {
         />
 
         {/* Contenido centrado */}
-        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto pb-80">
 
           {/* Encabezado geográfico */}
           <div className="flex items-center gap-4 justify-center mb-10">
@@ -111,6 +112,9 @@ export default function Landing() {
             <div className="h-px flex-1 max-w-16 bg-white" />
           </div>
         </div>
+
+        {/* Animación vaquero */}
+        <HeroAnimation />
 
         {/* Degradado inferior */}
         <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-earth-900 to-transparent pointer-events-none" />
