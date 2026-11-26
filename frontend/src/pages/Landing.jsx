@@ -30,7 +30,7 @@ export default function Landing() {
         />
         <div className="absolute inset-0 bg-earth-900/70" />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 pt-48 pb-72 text-center">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 pt-48 pb-80 text-center">
           <img src="/logo.png" alt="JINETES"
             className="h-52 w-auto mx-auto mb-6 brightness-0 invert drop-shadow-2xl" />
           <p className="text-primary-300 font-semibold uppercase tracking-widest text-sm mb-3">
