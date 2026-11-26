@@ -35,7 +35,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        sans:    ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        serif:   ['Playfair Display', 'Georgia', 'serif'],
+        western: ['Rye', 'serif'],
       },
     },
   },
